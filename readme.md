@@ -30,7 +30,7 @@ tf https://www.dafont.com/super-adorable.font
 Install Python packages (if needed):
 
 ```bash
-pip install --user requests beautifulsoup4
+pip install --user requests beautifulsoup4 tqdm
 ```
 
 ## 📦 Uninstall

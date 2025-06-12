@@ -7,27 +7,30 @@ import zipfile
 import shutil
 from tqdm import tqdm
 
-print("🌐 Fetching font page...")
-
 if len(sys.argv) < 2:
     print("Usage: tf <dafont-font-url>")
     sys.exit(1)
 
 url = sys.argv[1]
 
-# Extract font name from URL and construct direct download URL
-font_name = url.split("/")[-1].split(".")[0].replace("-", "_")
-download_url = f"https://dl.dafont.com/dl/?f={font_name}"
+# Extract the font slug from the URL, e.g. 'simple-diary' from 'https://www.dafont.com/simple-diary.font'
+font_slug = url.rstrip('/').split('/')[-1].replace('.font', '')
 
-print(f"📦 Downloading {font_name} from {download_url}")
+# Replace dashes with underscores for the download URL
+download_slug = font_slug.replace('-', '_')
 
-# Download with progress bar
-response = requests.get(download_url, stream=True)
-if response.status_code != 200:
-    print("❌ Failed to download font file. Check the URL or your internet connection.")
+download_url = f"https://dl.dafont.com/dl/?f={download_slug}"
+
+print(f"📦 Downloading {font_slug} from {download_url}")
+
+try:
+    response = requests.get(download_url, stream=True)
+    response.raise_for_status()
+except Exception as e:
+    print(f"❌ Failed to download the font zip: {e}")
     sys.exit(1)
 
-zip_path = f"{font_name}.zip"
+zip_path = f"{font_slug}.zip"
 total = int(response.headers.get('content-length', 0))
 
 with open(zip_path, "wb") as file, tqdm(
@@ -74,4 +77,4 @@ shutil.rmtree(temp_dir)
 print("🔄 Refreshing font cache...")
 os.system("fc-cache -f")
 
-print(f"✅ Installed '{font_name}' font!")
+print(f"✅ Installed '{font_slug}' font!")
