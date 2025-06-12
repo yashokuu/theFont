@@ -14,29 +14,15 @@ ASCII_CAT="
 echo "$ASCII_CAT"
 echo "🌟 Installing theFont $VERSION..."
 
-# Check OS (basic Arch check)
-is_arch() {
-  grep -qi arch /etc/os-release 2>/dev/null
-}
-
-# Install Python libs helper
 install_python_libs() {
-  if is_arch; then
+  # Check if Arch (super basic)
+  if grep -qi arch /etc/os-release 2>/dev/null; then
     echo "Detected Arch Linux."
 
-    echo "Need to install Python dependencies: python-requests, python-bs4, python-tqdm"
-    read -rp "Install via pacman? This may ask to overwrite files and could break packages. (y/N): " yn
-    case "$yn" in
-      [Yy]* )
-        sudo pacman -S --needed python-requests python-bs4 python-tqdm
-        ;;
-      * )
-        echo "Skipping system package install. Installing with pip in user mode..."
-        pip install --user requests beautifulsoup4 tqdm
-        ;;
-    esac
+    echo "Installing Python libs with pip using --break-system-packages..."
+    pip install --break-system-packages --user requests beautifulsoup4 tqdm
   else
-    echo "Non-Arch system detected. Installing Python libs via pip --user..."
+    echo "Non-Arch system detected. Installing Python libs with pip --user..."
     pip install --user requests beautifulsoup4 tqdm
   fi
 }
