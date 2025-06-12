@@ -5,7 +5,6 @@ import os
 import sys
 import zipfile
 import shutil
-from bs4 import BeautifulSoup
 from tqdm import tqdm
 
 print("🌐 Fetching font page...")
@@ -15,36 +14,24 @@ if len(sys.argv) < 2:
     sys.exit(1)
 
 url = sys.argv[1]
-r = requests.get(url)
-soup = BeautifulSoup(r.text, "html.parser")
 
-div = soup.find("div", class_="dlbox")
-if div is None:
-    print("❌ Couldn't find the download box. Make sure it's a valid DaFont URL.")
-    sys.exit(1)
-
-a = div.find("a")
-if a is None:
-    print("❌ Couldn't find the <a> tag inside the download box.")
-    sys.exit(1)
-
-part = a.get("href")
-if not part:
-    print("❌ Couldn't find the download link.")
-    sys.exit(1)
-
+# Extract font name from URL and construct direct download URL
 font_name = url.split("/")[-1].split(".")[0].replace("-", "_")
-download_url = f"https://www.dafont.com{part}"
+download_url = f"https://dl.dafont.com/dl/?f={font_name}"
 
 print(f"📦 Downloading {font_name} from {download_url}")
 
 # Download with progress bar
 response = requests.get(download_url, stream=True)
+if response.status_code != 200:
+    print("❌ Failed to download font file. Check the URL or your internet connection.")
+    sys.exit(1)
+
 zip_path = f"{font_name}.zip"
 total = int(response.headers.get('content-length', 0))
 
 with open(zip_path, "wb") as file, tqdm(
-    desc=f"⬇️  {zip_path}",
+    desc=zip_path,
     total=total,
     unit='B',
     unit_scale=True,
