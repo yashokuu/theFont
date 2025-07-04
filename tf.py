@@ -6,25 +6,40 @@ import sys
 import zipfile
 import shutil
 from tqdm import tqdm
+from urllib.parse import urlparse
 
 if len(sys.argv) < 2:
-    print("Usage: tf <dafont-font-url>")
+    print("Usage: tf <font-url>")
     sys.exit(1)
 
 url = sys.argv[1]
 
-# Extract the font slug from the URL, e.g. 'simple-diary' from 'https://www.dafont.com/simple-diary.font'
-font_slug = url.rstrip('/').split('/')[-1].replace('.font', '')
+parsed_url = urlparse(url)
+domain = parsed_url.netloc
 
-# Replace dashes with underscores for the download URL
-download_slug = font_slug.replace('-', '_')
+font_slug = ""
+download_url = ""
 
-download_url = f"https://dl.dafont.com/dl/?f={download_slug}"
+if 'dafont.com' in domain:
+    font_slug = url.rstrip('/').split('/')[-1].replace('.font', '')
+    download_slug = font_slug.replace('-', '_')
+    download_url = f"https://dl.dafont.com/dl/?f={download_slug}"
+elif '1001fonts.com' in domain:
+    font_slug = url.rstrip('/').split('/')[-1].replace('-font.html', '')
+    download_url = f"https://www.1001fonts.com/download/{font_slug}.zip"
+else:
+    print(f"❌ Unsupported font website: {domain}")
+    sys.exit(1)
+
 
 print(f"📦 Downloading {font_slug} from {download_url}")
 
+headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'
+}
+
 try:
-    response = requests.get(download_url, stream=True)
+    response = requests.get(download_url, stream=True, headers=headers)
     response.raise_for_status()
 except Exception as e:
     print(f"❌ Failed to download the font zip: {e}")

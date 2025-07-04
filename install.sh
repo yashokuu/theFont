@@ -3,12 +3,13 @@
 INSTALL_PATH="$HOME/.local/bin"
 SCRIPT_NAME="tf"
 SCRIPT_URL="https://raw.githubusercontent.com/yashokuu/theFont/main/tf.py"
-VERSION="V0"
+VERSION="v1"
 
 ASCII_CAT="
- /\_/\  
-( o.o )  theFont Installer
- > ^ <  
+  /\_/\
+ ( >.< ) theFont Installer
+  / - \
+ /_ _ _\
 "
 
 echo "$ASCII_CAT"
@@ -45,4 +46,4 @@ if ! echo "$PATH" | grep -q "$HOME/.local/bin"; then
   echo "🔁 Added ~/.local/bin to PATH. Restart your shell or run 'source $SHELL_RC'"
 fi
 
-echo "🚀 Done! Run 'tf <dafont-font-url>' to install fonts from dafont.com"
+echo "🚀 Done! Run 'tf <font-url>' to install fonts from dafont.com or 1001fonts.com"

@@ -1,8 +1,7 @@
-
-# theFont — simple daFont installer for Linux
+# theFont — simple font installer for Linux
 
 ## 🌟 What is this?
-`theFont` is a clean and minimalistic CLI tool to easily download and install fonts from [daFont.com](https://www.dafont.com).
+`theFont` is a clean and minimalistic CLI tool to easily download and install fonts from [daFont.com](https://www.dafont.com) and [1001fonts.com](https://www.1001fonts.com).
 
 ## 🚀 Install
 ```bash
@@ -13,11 +12,12 @@ bash <(curl -sL https://raw.githubusercontent.com/yashokuu/theFont/main/install.
 
 ```bash
 tf https://www.dafont.com/super-adorable.font
+tf https://www.1001fonts.com/your-font-name-font.html
 ```
 
 ## 🔧 Features
 
-* Installs any daFont font with a single command
+* Installs any font from daFont or 1001fonts with a single command
 * Downloads + extracts + caches automatically
 * No sudo needed, installs to `~/.local/share/fonts`
 
